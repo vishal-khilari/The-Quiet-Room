@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  serverExternalPackages: ['googleapis'],
+  images: {
+    domains: [],
+  },
 };
 
 export default nextConfig;

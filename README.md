@@ -1,36 +1,40 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# The Quiet Room
+
+A digital sanctuary where passing souls release their thoughts into the void. There are no metrics, no permanent profiles, and no expectations—only the quiet intimacy of anonymous expression and the comfort of knowing you are not alone. Say what you cannot say out loud.
+
+## Built With
+
+- Next.js (App Router)
+- Tailwind CSS
+- Framer Motion
+- Google Sheets API (Database)
+- Google Drive API (Audio Storage)
 
 ## Getting Started
 
-First, run the development server:
+To run this sanctuary locally on your machine:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. Clone the repository to your local environment.
+2. Run `npm install` to gather the necessary dependencies.
+3. Create a `.env.local` file at the root of the project (reference the provided `.env.example` for the required structure).
+4. Run `npm run dev` to start the local server. The room will open at `http://localhost:3000`.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Google Cloud Setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+To breathe life into the database and audio storage, you must configure a Google Cloud project:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Create a new project in the Google Cloud Console.
+2. Enable the **Google Sheets API** and **Google Drive API** for the project.
+3. Create a **Service Account** and generate a new JSON key.
+4. Extract the `client_email` and `private_key` from the JSON file to use in your `.env.local`.
+5. Create a new Google Sheet. Note its ID from the URL and share it with your Service Account email (Editor access).
+6. Create a new folder in Google Drive. Note its ID from the URL and share it with your Service Account email (Editor access).
+7. Populate your `.env.local` with these IDs and credentials.
 
-## Learn More
+## Deploy
 
-To learn more about Next.js, take a look at the following resources:
+The Quiet Room is pre-configured for a seamless deployment on Vercel. Connect your repository to Vercel and input your environment variables during setup. **Crucially**, when adding the `GOOGLE_PRIVATE_KEY` in the Vercel dashboard, ensure it is pasted exactly as a single line containing literal `\n` characters, just as it appears in your JSON key file, rather than actual line breaks.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Scaling Note
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This application utilizes Google Sheets and Google Drive as an elegant, free-tier backend for small-scale intimacy. However, Google Sheets imposes strict read/write rate limits (typically around 60 requests per user per minute). If the room grows crowded and traffic exceeds these boundaries, you will begin to encounter 429 Too Many Requests errors. At that stage, you should consider migrating the data layer to a traditional relational database (like PostgreSQL) and an S3-compatible object store.
