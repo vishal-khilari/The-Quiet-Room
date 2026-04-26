@@ -37,7 +37,7 @@ export async function PATCH(
     // Read the sheet to find the row
     const getRes = await sheets.spreadsheets.values.get({
       spreadsheetId: process.env.GOOGLE_SHEET_ID,
-      range: 'Sheet1!A:F',
+      range: 'Sheet1!A:E',
     });
 
     const rows = getRes.data.values;
@@ -60,11 +60,11 @@ export async function PATCH(
       return new NextResponse('Whisper not found', { status: 404 });
     }
 
-    // Parse existing reactions (Column F is index 5)
+    // Parse existing reactions (Column E is index 4)
     let reactions: Record<string, number> = { 'felt-this': 0, 'not-alone': 0, 'understand': 0 };
-    if (currentRow[5]) {
+    if (currentRow[4]) {
       try {
-        const parsed = JSON.parse(currentRow[5]) as Record<string, number>;
+        const parsed = JSON.parse(currentRow[4]) as Record<string, number>;
         reactions = { ...reactions, ...parsed };
       } catch {
         // stick to default
@@ -75,7 +75,7 @@ export async function PATCH(
     reactions[reactionKey] = (reactions[reactionKey] || 0) + 1;
 
     // The row in A1 notation is rowIndex + 1 (array is 0-indexed, sheets are 1-indexed)
-    const cellRange = `Sheet1!F${rowIndex + 1}`;
+    const cellRange = `Sheet1!E${rowIndex + 1}`;
 
     await sheets.spreadsheets.values.update({
       spreadsheetId: process.env.GOOGLE_SHEET_ID,

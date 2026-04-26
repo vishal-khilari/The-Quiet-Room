@@ -33,7 +33,9 @@ export async function POST(req: Request) {
     ipPostTimes.set(ip, userTimes);
 
     const body = await req.json();
-    const { text, author = 'Anonymous', audioBase64 } = body;
+    const { text, pseudonym, audioBase64 } = body;
+    
+    const finalPseudonym = pseudonym?.trim() || 'Anonymous';
     
     let audioUrl = '';
     if (audioBase64) {
@@ -75,11 +77,11 @@ export async function POST(req: Request) {
         values: [[
           crypto.randomUUID(), 
           new Date().toISOString(), 
-          author, 
+          finalPseudonym, 
           text, 
-          '', 
           JSON.stringify({ "felt-this": 0, "not-alone": 0, "understand": 0 }),
-          audioUrl
+          audioUrl,
+          ''
         ]]
       }
     });
@@ -117,7 +119,7 @@ export async function GET() {
     
     // Map rows to objects
     const whispers = dataRows.map(row => {
-      const [id, timestamp, author, text, , reactionsStr, audioUrl] = row;
+      const [id, timestamp, author, text, reactionsStr, audioUrl] = row;
       let reactions = {};
       try {
         reactions = reactionsStr ? JSON.parse(reactionsStr) : {};
